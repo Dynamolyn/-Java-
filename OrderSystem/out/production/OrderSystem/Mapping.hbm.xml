@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="cn.edu.seu.model">
+
+    <!--Begin-->
+    <!--Dish-->
+    <class name="Dish" table="dc_dish">
+        <id name="id" column="D_id" type="int">
+            <generator class="identity"/>
+        </id>
+        <property name="name" column="D_name" type="string"/>
+        <property name="description" column="D_description" type="string"/>
+        <property name="txt" column="D_txt" type="string"/>
+        <property name="img" column="D_img" type="string"/>
+        <property name="isRecommended" column="D_isRecommended" type="char"/>
+        <property name="price" column="D_price" type="float"/>
+    </class>
+
+    <!--Order-->
+    <class name="Order" table="dc_order">
+        <id name="id" column="O_id">
+            <generator class="identity"/>
+        </id>
+        <property name="beginTime" column="O_beginTime" type="timestamp"/>
+        <property name="endTime" column="O_endTime" type="timestamp"/>
+        <many-to-one name="state" column="O_state" class="OrderState" not-null="true" lazy="false"/>
+        <property name="waiterId" column="O_waiterId" type="int"/>
+        <property name="tableId" column="O_tableId" type="int"/>
+        <set name="food" table="dc_ordercontent" inverse="true" cascade="all" fetch="join" lazy="false">
+            <key>
+                <column name="OC_orderId"/>
+            </key>
+            <one-to-many class="OrderContent"/>
+        </set>
+    </class>
+
+    <!--OrderContent-->
+    <class name="OrderContent" table="dc_ordercontent">
+        <id name="id" column="OC_id" type="int">
+            <generator class="identity"/>
+        </id>
+        <many-to-one name="dishId" column="OC_dishId" class="Dish" not-null="true" lazy="false"/>
+        <property name="disNumber" column="OC_dishNumber"/>
+        <many-to-one name="orderId" column="OC_orderId" class="Order" not-null="true" lazy="false"/>
+    </class>
+
+    <!--OrderState-->
+    <class name="OrderState" table="dc_orderstate">
+        <id name="id" column="OS_id">
+            <generator class="identity"/>
+        </id>
+        <property name="name" column="OS_name" type="string"/>
+    </class>
+
+    <!--Table-->
+    <class name="Table" table="dc_table">
+        <id name="id" column="T_id" type="int">
+            <generator class="identity"/>
+        </id>
+        <property name="isFree" column="T_isFree" type="char"/>
+        <property name="size" column="T_size" type="int"/>
+    </class>
+
+    <!--User-->
+    <class name="User" table="dc_user">
+        <id name="id" column="U_id" type="int">
+            <generator class="identity"/>
+        </id>
+        <property name="account" column="U_account" type="string"/>
+        <property name="pwd" column="U_pwd" type="string"/>
+        <property name="isLocked" column="U_isLocked" type="char"/>
+        <property name="faceImg" column="U_faceImg" type="string"/>
+        <property name="name" column="U_name" type="string"/>
+        <property name="sex" column="U_sex" type="char"/>
+        <property name="phoneNumber" column="U_phoneNumber" type="string"/>
+        <property name="address" column="U_address" type="string"/>
+        <many-to-one name="position" column="U_position" class="UserPosition" not-null="true" lazy="false"/>
+    </class>
+
+    <!--UserPosition-->
+    <class name="UserPosition" table="dc_userposition">
+        <id name="id" column="UP_id">
+            <generator class="identity"/>
+        </id>
+        <property name="name" column="UP_name" type="string"/>
+    </class>
+
+    <!--VIPCustomer-->
+    <class name="VIPCustomer" table="dc_vipcustomer">
+        <id name="id" column="VC_id">
+            <generator class="identity"/>
+        </id>
+        <property name="name" column="VC_name" type="string"/>
+        <property name="sex" column="VC_sex" type="char"/>
+        <property name="phoneNumber" column="VC_phoneNumber" type="string"/>
+        <property name="dinningTimes" column="VC_dinningTimes" type="int"/>
+        <property name="dinningSum" column="VC_dinningSum" type="float"/>
+    </class>
+
+    <!--End-->
+</hibernate-mapping>
